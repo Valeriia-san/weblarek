@@ -1,6 +1,44 @@
-export type ApiPostMethods = 'POST' | 'PUT' | 'DELETE';
+export type ApiPostMethods = "POST" | "PUT" | "DELETE";
+
+export type TPayment = "cash" | "card" | undefined;
+
+export type ValidationResult = string | null;
 
 export interface IApi {
-    get<T extends object>(uri: string): Promise<T>;
-    post<T extends object>(uri: string, data: object, method?: ApiPostMethods): Promise<T>;
+  get<T extends object>(uri: string): Promise<T>;
+  post<T extends object>(uri: string, data: object, method?: ApiPostMethods): Promise<T>;
+}
+
+export interface IProduct {
+  id: string;
+  description: string;
+  image: string;
+  title: string;
+  category: string;
+  price: number | null;
+}
+
+export interface IBuyer {
+  payment?: TPayment;
+  email: string;
+  phone: string;
+  address: string;
+}
+
+export interface IValidation {
+  payment: (value: TPayment) => ValidationResult;
+  email: (value: string) => ValidationResult;
+  phone: (value: string) => ValidationResult;
+  address: (value: string) => ValidationResult;
+}
+
+export interface IOrder extends IBuyer {
+  total: number;
+  items: string[];
+}
+
+export interface IResponse {
+  id?: string;
+  total?: number;
+  error?: string;
 }
