@@ -10,7 +10,7 @@ export class Cart {
   getTotalPrice(): number {
     return this._items.reduce((sum: number, item) => {
       return sum + Number(item.price);
-    }, 0)
+    }, 0);
   }
 
   getItemsCount(): number {
@@ -24,7 +24,7 @@ export class Cart {
   }
 
   deleteItem(itemToDelete: IProduct): void {
-    this._items = this._items.filter(item => item.id !== itemToDelete.id);
+    this._items = this._items.filter((item) => item.id !== itemToDelete.id);
   }
 
   clearCart(): void {
@@ -32,6 +32,6 @@ export class Cart {
   }
 
   checkItem(id: string): boolean {
-    return this._items.some(item => item.id === id);
+    return this._items.some((item) => item.id === id);
   }
 }
