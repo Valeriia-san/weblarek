@@ -31,3 +31,14 @@ export interface IValidation {
   phone: (value: string) => ValidationResult;
   address: (value: string) => ValidationResult;
 }
+
+export interface IOrder extends IBuyer {
+  total: number,
+  items: string[],
+}
+
+export interface IResponse {
+  id?: string,
+  total?: number,
+  error?: string,
+}
