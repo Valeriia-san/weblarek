@@ -1,6 +1,6 @@
-export type ApiPostMethods = 'POST' | 'PUT' | 'DELETE';
+export type ApiPostMethods = "POST" | "PUT" | "DELETE";
 
-export type TPayment = 'cash' | 'card' | undefined;
+export type TPayment = "cash" | "card" | undefined;
 
 export type ValidationResult = string | null;
 
@@ -33,12 +33,12 @@ export interface IValidation {
 }
 
 export interface IOrder extends IBuyer {
-  total: number,
-  items: string[],
+  total: number;
+  items: string[];
 }
 
 export interface IResponse {
-  id?: string,
-  total?: number,
-  error?: string,
+  id?: string;
+  total?: number;
+  error?: string;
 }

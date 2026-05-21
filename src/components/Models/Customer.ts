@@ -15,16 +15,16 @@ export class Customer {
 
   setNewValue<T extends keyof IBuyer>(field: T, value: IBuyer[T]): void {
     switch (field) {
-      case 'payment':
+      case "payment":
         this._payment = value as TPayment;
         break;
-      case 'email':
+      case "email":
         this._email = value as string;
         break;
-      case 'phone':
+      case "phone":
         this._phone = value as string;
         break;
-      case 'address':
+      case "address":
         this._address = value as string;
         break;
     }
@@ -32,19 +32,19 @@ export class Customer {
 
   getInfo(): IBuyer {
     return {
-      payment: this._payment, 
-      email: this._email, 
-      phone: this._phone, 
-      address: this._address
-    }
+      payment: this._payment,
+      email: this._email,
+      phone: this._phone,
+      address: this._address,
+    };
   }
 
   clearInfo(): void {
     this._payment = undefined;
-    this._email = '';
-    this._phone = '';
-    this._address = '';
-  };
+    this._email = "";
+    this._phone = "";
+    this._address = "";
+  }
 
   validate(rules: IValidation): Record<string, ValidationResult> {
     const errors: Record<string, ValidationResult> = {};
@@ -54,12 +54,15 @@ export class Customer {
     errors.phone = rules.phone(this._phone);
     errors.address = rules.address(this._address);
 
-    return Object.entries(errors).reduce((obj: { [key: string]: string }, [field, value]) => {
-      if (value) {
-        obj[field] = value;
-      }
+    return Object.entries(errors).reduce(
+      (obj: { [key: string]: string }, [field, value]) => {
+        if (value) {
+          obj[field] = value;
+        }
 
-      return obj;
-    }, {});
+        return obj;
+      },
+      {}
+    );
   }
 }
