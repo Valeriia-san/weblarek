@@ -1,17 +1,10 @@
-import { TPayment, IBuyer, ValidationResult, IValidation } from "../../types";
+import { TPayment, IBuyer, ValidationErrors } from "../../types";
 
 export class Customer {
-  private _payment: TPayment;
-  private _email: string;
-  private _phone: string;
-  private _address: string;
-
-  constructor(buyer: IBuyer) {
-    this._payment = buyer.payment;
-    this._email = buyer.email;
-    this._phone = buyer.phone;
-    this._address = buyer.address;
-  }
+  private _payment: TPayment = "";
+  private _email: string = "";
+  private _phone: string = "";
+  private _address: string = "";
 
   setNewValue<T extends keyof IBuyer>(field: T, value: IBuyer[T]): void {
     switch (field) {
@@ -40,29 +33,23 @@ export class Customer {
   }
 
   clearInfo(): void {
-    this._payment = undefined;
+    this._payment = "";
     this._email = "";
     this._phone = "";
     this._address = "";
   }
 
-  validate(rules: IValidation): Record<string, ValidationResult> {
-    const errors: Record<string, ValidationResult> = {};
+  validate(): ValidationErrors {
+    const errors: ValidationErrors = {};
 
-    errors.payment = rules.payment(this._payment);
-    errors.email = rules.email(this._email);
-    errors.phone = rules.phone(this._phone);
-    errors.address = rules.address(this._address);
+    if (!this._payment) errors.payment = "Не выбран тип оплаты";
 
-    return Object.entries(errors).reduce(
-      (obj: { [key: string]: string }, [field, value]) => {
-        if (value) {
-          obj[field] = value;
-        }
+    if (!this._email) errors.email = "Укажите e-mail";
 
-        return obj;
-      },
-      {}
-    );
+    if (!this._phone) errors.email = "Укажите номер телефона";
+
+    if (!this._address) errors.address = "Укажите адрес доставки";
+
+    return errors;
   }
 }

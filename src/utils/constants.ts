@@ -1,5 +1,3 @@
-import { IValidation } from "../types";
-
 /* Константа для получения полного пути для сервера. Для выполнения запроса 
 необходимо к API_URL добавить только ендпоинт. */
 export const API_URL = `${import.meta.env.VITE_API_ORIGIN}/api/weblarek`; 
@@ -21,21 +19,3 @@ export const categoryMap = {
 export const settings = {
 
 };
-
-/* Константа с набором правил валидации полей формы заказа и сбора данных пользователя */
-export const ValidationRules: IValidation = {
-  payment: (value) => value ? null : 'Не выбран тип оплаты',
-  email: (value) => {
-    if (!value) return 'Укажите e-mail';
-    const regExp = /^\w+@\w+\.[a-zA-Z]{2,}$/;
-    if (!regExp.test(value)) return 'Введите корректный e-mail';
-    return null;
-  },
-  phone: value => {
-    if (!value) return 'Укажите номер телефона';
-    const regExp = /^\+7\d{10}$/;
-    if (!regExp.test(value)) return 'Введите корректный номер телефона';
-    return null;
-  },
-  address: (value) => value ? null : 'Укажите адрес доставки',
-}

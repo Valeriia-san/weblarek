@@ -7,11 +7,15 @@ export class ApiClient {
     this._api = api;
   }
 
-  async getData(uri: string): Promise<{ total: number; items: IProduct[] }> {
-    return this._api.get(uri);
+  async getProducts(uri: string): { total: number; items: IProduct[] } {
+    const result = await this._api.get(uri);
+
+    return result;
   }
 
-  async postData(uri: string, data: IOrder): Promise<IResponse> {
-    return this._api.post(uri, data);
+  async postOrder(uri: string, data: IOrder): IResponse {
+    const result = await this._api.post(uri, data);
+
+    return result;
   }
 }
