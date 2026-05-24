@@ -1,7 +1,7 @@
 import "./scss/styles.scss";
 
-import { ValidationRules } from "./utils/constants";
 import { API_URL } from "./utils/constants";
+import { apiProducts } from "./utils/data";
 
 import { Catalog } from "./components/Models/Catalog";
 import { Cart } from "./components/Models/Cart";
@@ -12,31 +12,10 @@ import { ApiClient } from "./components/ApiClient";
 
 import { IOrder } from "./types";
 
-/* Тестируем работу с сервером */
-const realApi = new Api(API_URL);
-const service = new ApiClient(realApi);
-
-const order: IOrder = {
-  payment: "card",
-  email: "test@test.ru",
-  phone: "+71234567890",
-  address: "Spb Vosstania 1",
-  total: 2200,
-  items: [
-    "854cef69-976d-4c2a-a18c-2aa45046c390",
-    "c101ab44-ed99-4a54-990d-47aa2bb4e7d9",
-  ],
-};
-
-const result = await service.postData("/order/", order);
-console.log("Результат публикации заказа", result);
-
-const data = await service.getData("/product/");
-
 /* Тестируем работу модели данных Catalog*/
 const catalog = new Catalog();
 
-catalog.products = data.items;
+catalog.products = apiProducts.items;
 console.log("Массив товаров из каталога: ", catalog.products);
 
 const productId = "c101ab44-ed99-4a54-990d-47aa2bb4e7d9";
@@ -97,19 +76,59 @@ console.log("Количество: ", shoppingCart.getItemsCount());
 console.log("Общая сумма: ", shoppingCart.getTotalPrice());
 
 /* Тестируем работу модели данных Customer*/
-const testUser = {
-  email: "testya.ru",
-  phone: "+9109999999",
-  address: "Москва, Вокзальная площадь, д. 1",
+const customerWithEmptyFields = new Customer();
+
+customerWithEmptyFields.setNewValue("payment", "cash");
+customerWithEmptyFields.setNewValue("phone", "+79997773366");
+console.log("Данные покупателя 1: ", customerWithEmptyFields.getInfo());
+
+console.log("Результат проверки данных покупателя 1: ", customerWithEmptyFields.validate());
+
+customerWithEmptyFields.clearInfo();
+console.log("Данные покупателя 1 удалены: ", customerWithEmptyFields.getInfo());
+
+const customerWithFilledFields = new Customer();
+
+customerWithFilledFields.setNewValue("payment", "card");
+customerWithFilledFields.setNewValue("email", "test@test.ru");
+customerWithFilledFields.setNewValue("phone", "+74952001155");
+customerWithFilledFields.setNewValue("address", "г. Москва, ул. Охотный ряд, д. 1");
+
+console.log("Данные покупателя 2: ", customerWithFilledFields.getInfo());
+
+console.log("Результат проверки данных покупателя 2: ", customerWithFilledFields.validate());
+
+/* Тестируем работу с сервером */
+const realApi = new Api(API_URL);
+const service = new ApiClient(realApi);
+
+const catalogFromServer = new Catalog();
+
+service.getProducts()
+.then(data => {
+  catalogFromServer.products = data.items;
+  console.log("Массив товаров, полученных от сервера: ", catalogFromServer.products);
+})
+.catch(error => {
+  console.error("Возникла ошибка: ", error);
+})
+
+const order: IOrder = {
+  payment: "card",
+  email: "",
+  phone: "+71234567890",
+  address: "Spb Vosstania 1",
+  total: 2200,
+  items: [
+    "854cef69-976d-4c2a-a18c-2aa45046c390",
+    "c101ab44-ed99-4a54-990d-47aa2bb4e7d9",
+  ],
 };
 
-const customer = new Customer(testUser);
-console.log("Данные покупателя 1: ", customer.getInfo());
-
-customer.setNewValue("payment", "cash");
-console.log("Данные обновлены: ", customer.getInfo());
-
-console.log("Результат проверки данных: ", customer.validate(ValidationRules));
-
-customer.clearInfo();
-console.log("Данные удалены: ", customer.getInfo());
+service.postOrder(order)
+.then(data => {
+  console.log(`Заказ оформлен - id заказа: ${data.id}, общая стоимость заказа: ${data.total}`);
+})
+.catch(error => {
+  console.error("Ошибка при оформлении заказа: ", error);
+})

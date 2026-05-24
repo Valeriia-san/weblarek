@@ -39,17 +39,21 @@ export class Customer {
     this._address = "";
   }
 
-  validate(): ValidationErrors {
+  validate(): ValidationErrors | string {
     const errors: ValidationErrors = {};
 
     if (!this._payment) errors.payment = "Не выбран тип оплаты";
 
     if (!this._email) errors.email = "Укажите e-mail";
 
-    if (!this._phone) errors.email = "Укажите номер телефона";
+    if (!this._phone) errors.phone = "Укажите номер телефона";
 
     if (!this._address) errors.address = "Укажите адрес доставки";
 
-    return errors;
+    if (Object.keys(errors).length === 0) {
+      return "ошибок нет";
+    } else {
+      return errors;
+    }
   }
 }
