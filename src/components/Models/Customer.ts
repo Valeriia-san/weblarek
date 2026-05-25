@@ -1,7 +1,7 @@
 import { TPayment, IBuyer, ValidationErrors } from "../../types";
 
 export class Customer {
-  private _payment: TPayment = "";
+  private _payment: TPayment | "" = "";
   private _email: string = "";
   private _phone: string = "";
   private _address: string = "";
@@ -50,10 +50,6 @@ export class Customer {
 
     if (!this._address) errors.address = "Укажите адрес доставки";
 
-    if (Object.keys(errors).length === 0) {
-      return "ошибок нет";
-    } else {
-      return errors;
-    }
+    return errors;
   }
 }
